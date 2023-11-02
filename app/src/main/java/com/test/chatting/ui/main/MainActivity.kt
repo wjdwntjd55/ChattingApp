@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.test.chatting.R
 import com.test.chatting.databinding.ActivityMainBinding
+import com.test.chatting.ui.login.LoginFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        replaceFragment(LOGIN_FRAGMENT, false, null)
 
     }
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         // 새로운 Fragment를 담을 변수
         newFragment = when(name){
+            LOGIN_FRAGMENT -> LoginFragment()
             else -> Fragment()
         }
 
@@ -50,6 +54,10 @@ class MainActivity : AppCompatActivity() {
     // Fragment를 BackStack에서 제거한다.
     fun removeFragment(name: String){
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    companion object {
+        val LOGIN_FRAGMENT = "LoginFragment"
     }
 
 }
