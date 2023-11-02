@@ -1,36 +1,28 @@
-package com.test.chatting.ui.login
+package com.test.chatting.ui.join
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.test.chatting.databinding.FragmentLoginBinding
+import com.test.chatting.R
+import com.test.chatting.databinding.FragmentJoinBinding
 import com.test.chatting.ui.main.MainActivity
 
-class LoginFragment : Fragment() {
+
+class JoinFragment : Fragment() {
 
     lateinit var mainActivity: MainActivity
-    lateinit var binding: FragmentLoginBinding
+    lateinit var binding: FragmentJoinBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
-
-        signBtn()
+        binding = FragmentJoinBinding.inflate(layoutInflater)
 
         return binding.root
-    }
-
-    fun signBtn() {
-
-        binding.buttonLoginJoin.setOnClickListener {
-            mainActivity.replaceFragment(MainActivity.JOIN_FRAGMENT, true, null)
-        }
-
     }
 
 

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.test.chatting.R
 import com.test.chatting.databinding.ActivityMainBinding
+import com.test.chatting.ui.join.JoinFragment
 import com.test.chatting.ui.login.LoginFragment
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         // 새로운 Fragment를 담을 변수
         newFragment = when(name){
             LOGIN_FRAGMENT -> LoginFragment()
+            JOIN_FRAGMENT -> JoinFragment()
             else -> Fragment()
         }
 
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         val LOGIN_FRAGMENT = "LoginFragment"
+        val JOIN_FRAGMENT = "JoinFragment"
     }
 
 }
