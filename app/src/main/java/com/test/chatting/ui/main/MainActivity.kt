@@ -1,13 +1,16 @@
 package com.test.chatting.ui.main
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.test.chatting.R
 import com.test.chatting.databinding.ActivityMainBinding
 import com.test.chatting.ui.join.JoinFragment
 import com.test.chatting.ui.login.LoginFragment
+import com.test.chatting.ui.userlist.UserListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         newFragment = when(name){
             LOGIN_FRAGMENT -> LoginFragment()
             JOIN_FRAGMENT -> JoinFragment()
+            USER_LIST_FRAGMENT -> UserListFragment()
             else -> Fragment()
         }
 
@@ -58,9 +62,18 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
+    fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocusView = currentFocus
+        currentFocusView?.let {
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
+    }
+
     companion object {
         val LOGIN_FRAGMENT = "LoginFragment"
         val JOIN_FRAGMENT = "JoinFragment"
+        val USER_LIST_FRAGMENT = "UserListFragment"
     }
 
 }
