@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.test.chatting.R
 import com.test.chatting.databinding.FragmentUserListBinding
+import com.test.chatting.model.User
 import com.test.chatting.ui.main.MainActivity
 
 class UserListFragment : Fragment() {
@@ -20,6 +21,8 @@ class UserListFragment : Fragment() {
     val TAG = "UserListFragment"
 
     private lateinit var viewModel: UserListViewModel
+
+    var allUserInfo = mutableListOf<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,16 +36,22 @@ class UserListFragment : Fragment() {
         viewModel.getAllUserInfo()
 
         viewModel.userListLiveData.observe(viewLifecycleOwner) { userList ->
+            userList.forEach { allUserInfo.add(it) }
+
             Log.d(TAG, "userList : ${userList}")
+            initRecyclerView()
+
         }
 
 
-        val recyclerView = binding.recyclerViewUserList
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = UserListAdapter()
-
 
         return binding.root
+    }
+
+    private fun initRecyclerView() {
+        val recyclerView = binding.recyclerViewUserList
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = UserListAdapter(allUserInfo)
     }
 
 
