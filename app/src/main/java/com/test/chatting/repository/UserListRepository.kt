@@ -1,5 +1,6 @@
 package com.test.chatting.repository
 
+import android.util.Log
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.test.chatting.model.Key
@@ -30,6 +31,26 @@ class UserListRepository {
         }
 
         return userList
+    }
+
+    suspend fun getCurrentLoginUserInfo(currentUserUid : String): User {
+        var currentUserInfo = User()
+
+        val snapshot = db.reference.child(Key.DB_USERS)
+            .child(currentUserUid)
+            .get()
+            .await()
+
+        if (snapshot.exists()) {
+
+            val currentUserUid = snapshot.child("userId").getValue(String::class.java)
+            val currentUserName = snapshot.child("userName").getValue(String::class.java)
+
+            currentUserInfo = User(currentUserUid, currentUserName)
+
+        }
+
+        return currentUserInfo
     }
 
 }
