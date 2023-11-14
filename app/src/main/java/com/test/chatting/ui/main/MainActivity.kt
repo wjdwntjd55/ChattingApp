@@ -3,6 +3,7 @@ package com.test.chatting.ui.main
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -68,6 +69,32 @@ class MainActivity : AppCompatActivity() {
         currentFocusView?.let {
             imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
+    }
+
+    fun showBottomNavigationView() {
+        activityMainBinding.bottomNavigationViewMain.visibility = View.VISIBLE
+    }
+
+    fun hideBottomNavigationView() {
+        activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
+    }
+    fun bottomNavigation() {
+
+        activityMainBinding.bottomNavigationViewMain.run {
+            visibility = View.VISIBLE
+
+            setOnItemSelectedListener {
+                when(it.itemId) {
+                    R.id.user_list_menu -> {
+                        replaceFragment(USER_LIST_FRAGMENT, false, null)
+                        return@setOnItemSelectedListener false
+                    }
+
+                    else -> return@setOnItemSelectedListener false
+                }
+            }
+        }
+
     }
 
     companion object {

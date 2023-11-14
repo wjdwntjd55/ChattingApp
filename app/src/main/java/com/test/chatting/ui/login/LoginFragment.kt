@@ -26,6 +26,8 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        mainActivity.hideBottomNavigationView()
+
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
         signBtn()
@@ -63,6 +65,8 @@ class LoginFragment : Fragment() {
 
         viewModel.loginResultLiveData.observe(viewLifecycleOwner) { loginResult ->
             if (loginResult) {
+                mainActivity.hideKeyboard()
+                mainActivity.bottomNavigation()
                 mainActivity.replaceFragment(MainActivity.USER_LIST_FRAGMENT, false, null)
                 Snackbar.make(binding.root, "로그인에 성공했습니다", Snackbar.LENGTH_LONG).show()
             } else {
