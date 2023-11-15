@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         val currentFocusView = currentFocus
         currentFocusView?.let {
             imm.hideSoftInputFromWindow(it.windowToken, 0)
+            currentFocusView.clearFocus()
         }
     }
 
