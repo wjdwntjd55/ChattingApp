@@ -19,4 +19,8 @@ class MyPageViewModel: ViewModel() {
         }
     }
 
+    fun upDateDescription(description : String) {
+        userListRepository.upDateDescription(description)
+    }
+
 }

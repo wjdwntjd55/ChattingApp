@@ -37,6 +37,7 @@ class MyPageFragment : Fragment() {
         viewModel.getCurrentLoginUserInfo(CURRENT_USER_UID)
 
         inintView()
+        updateUserInfo()
 
 
         return binding.root
@@ -54,5 +55,19 @@ class MyPageFragment : Fragment() {
         }
 
     }
+
+    fun updateUserInfo() {
+
+        binding.buttonMyPageApply.setOnClickListener {
+            val description = binding.editTextMyPageDescription.text.toString()
+
+            viewModel.upDateDescription(description)
+
+            mainActivity.hideKeyboard()
+
+        }
+
+    }
+
 
 }

@@ -54,4 +54,15 @@ class UserListRepository {
         return currentUserInfo
     }
 
+    fun upDateDescription(description : String) {
+
+        val userInfo = mutableMapOf<String, Any >()
+        userInfo["description"] = description
+
+        db.reference.child(Key.DB_USERS)
+            .child(LoginRepository.CURRENT_USER_UID)
+            .updateChildren(userInfo)
+
+    }
+
 }
