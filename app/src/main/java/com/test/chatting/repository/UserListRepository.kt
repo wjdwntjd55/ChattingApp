@@ -45,8 +45,9 @@ class UserListRepository {
 
             val currentUserUid = snapshot.child("userId").getValue(String::class.java)
             val currentUserName = snapshot.child("userName").getValue(String::class.java)
+            val currentUserDescription = snapshot.child("description").getValue(String::class.java)
 
-            currentUserInfo = User(currentUserUid, currentUserName)
+            currentUserInfo = User(currentUserUid, currentUserName, currentUserDescription)
 
         }
 

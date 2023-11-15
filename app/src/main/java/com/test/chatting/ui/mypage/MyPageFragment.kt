@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.test.chatting.databinding.FragmentMyPageBinding
+import com.test.chatting.model.Key
 import com.test.chatting.model.User
 import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_UID
 import com.test.chatting.ui.main.MainActivity
@@ -45,6 +48,8 @@ class MyPageFragment : Fragment() {
 
             binding.editTextMyPageUsername.setText(userInfo.username)
             binding.editTextMyPageUsername.isEnabled = false
+
+            binding.editTextMyPageDescription.setText(userInfo.description)
 
         }
 
