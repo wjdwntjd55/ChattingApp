@@ -31,6 +31,10 @@ class LoginRepository {
         Firebase.database(DB_URL).reference.child(DB_USERS).child(userId).updateChildren(user)
     }
 
+    fun logOutUser() {
+        db.signOut()
+    }
+
     companion object {
         var CURRENT_USER_UID: String = ""
         var CURRENT_USER_EMAIL: String = ""

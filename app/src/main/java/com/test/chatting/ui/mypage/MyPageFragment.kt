@@ -38,6 +38,7 @@ class MyPageFragment : Fragment() {
 
         inintView()
         updateUserInfo()
+        signOut()
 
 
         return binding.root
@@ -65,6 +66,15 @@ class MyPageFragment : Fragment() {
 
             mainActivity.hideKeyboard()
 
+        }
+
+    }
+
+    fun signOut() {
+
+        binding.buttonMyPageSignOut.setOnClickListener {
+            viewModel.logOut()
+            mainActivity.replaceFragment(MainActivity.LOGIN_FRAGMENT, false, null)
         }
 
     }
