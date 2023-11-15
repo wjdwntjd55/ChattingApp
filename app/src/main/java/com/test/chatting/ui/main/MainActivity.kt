@@ -105,6 +105,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // 어떤, 바텀 네비게이션이 선택되었는지 알려주기
+    fun selectBottomNavigationItem(itemId: Int) {
+        activityMainBinding.bottomNavigationViewMain.selectedItemId = itemId
+    }
+
     companion object {
         val LOGIN_FRAGMENT = "LoginFragment"
         val JOIN_FRAGMENT = "JoinFragment"

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.test.chatting.R
 import com.test.chatting.databinding.FragmentMyPageBinding
 import com.test.chatting.model.Key
 import com.test.chatting.model.User
@@ -74,6 +75,7 @@ class MyPageFragment : Fragment() {
 
         binding.buttonMyPageSignOut.setOnClickListener {
             viewModel.logOut()
+            mainActivity.selectBottomNavigationItem(R.id.user_list_menu)
             mainActivity.replaceFragment(MainActivity.LOGIN_FRAGMENT, false, null)
         }
 
