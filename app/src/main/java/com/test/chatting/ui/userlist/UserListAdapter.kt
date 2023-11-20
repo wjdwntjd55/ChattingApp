@@ -43,6 +43,7 @@ class UserListAdapter(private var allUserDataList : MutableList<User>) : Recycle
 
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         holder.userName.text = allUserDataList[position].username
+        holder.userDescription.text = allUserDataList[position].description
     }
 
 }
