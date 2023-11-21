@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.test.chatting.R
 import com.test.chatting.databinding.ActivityMainBinding
+import com.test.chatting.ui.chattinglist.ChattingListFragment
 import com.test.chatting.ui.join.JoinFragment
 import com.test.chatting.ui.login.LoginFragment
 import com.test.chatting.ui.mypage.MyPageFragment
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             JOIN_FRAGMENT -> JoinFragment()
             USER_LIST_FRAGMENT -> UserListFragment()
             MY_PAGE_FRAGMENT -> MyPageFragment()
+            CHATTING_LIST_FRAGMENT -> ChattingListFragment()
             else -> Fragment()
         }
 
@@ -98,6 +100,11 @@ class MainActivity : AppCompatActivity() {
                         return@setOnItemSelectedListener true
                     }
 
+                    R.id.chatting_list_menu -> {
+                        replaceFragment(CHATTING_LIST_FRAGMENT, false, null)
+                        return@setOnItemSelectedListener true
+                    }
+
                     else -> return@setOnItemSelectedListener false
                 }
             }
@@ -115,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         val JOIN_FRAGMENT = "JoinFragment"
         val USER_LIST_FRAGMENT = "UserListFragment"
         val MY_PAGE_FRAGMENT = "MyPageFragment"
+        val CHATTING_LIST_FRAGMENT = "ChattingListFragment"
     }
 
 }
