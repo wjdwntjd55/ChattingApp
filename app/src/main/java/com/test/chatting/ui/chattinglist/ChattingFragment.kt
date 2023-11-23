@@ -30,6 +30,8 @@ class ChattingFragment : Fragment() {
         mainActivity = activity as MainActivity
         binding = FragmentChattingBinding.inflate(layoutInflater)
 
+        mainActivity.hideBottomNavigationView()
+
         otherUser = arguments?.getParcelable("otherUser") ?: User("", "", "")
 
         viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
@@ -39,6 +41,12 @@ class ChattingFragment : Fragment() {
         Log.d(TAG, otherUser.toString() )
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        
+        mainActivity.showBottomNavigationView()
     }
 
 
