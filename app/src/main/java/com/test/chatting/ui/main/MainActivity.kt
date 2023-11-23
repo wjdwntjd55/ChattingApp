@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.test.chatting.R
 import com.test.chatting.databinding.ActivityMainBinding
+import com.test.chatting.ui.chattinglist.ChattingFragment
 import com.test.chatting.ui.chattinglist.ChattingListFragment
 import com.test.chatting.ui.join.JoinFragment
 import com.test.chatting.ui.login.LoginFragment
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             USER_LIST_FRAGMENT -> UserListFragment()
             MY_PAGE_FRAGMENT -> MyPageFragment()
             CHATTING_LIST_FRAGMENT -> ChattingListFragment()
+            CHATTING_FRAGMENT -> ChattingFragment()
             else -> Fragment()
         }
 
@@ -123,6 +125,7 @@ class MainActivity : AppCompatActivity() {
         val USER_LIST_FRAGMENT = "UserListFragment"
         val MY_PAGE_FRAGMENT = "MyPageFragment"
         val CHATTING_LIST_FRAGMENT = "ChattingListFragment"
+        val CHATTING_FRAGMENT = "ChattingFragment"
     }
 
 }
