@@ -6,14 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.test.chatting.databinding.FragmentChattingBinding
 import com.test.chatting.model.User
+import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_UID
 import com.test.chatting.ui.main.MainActivity
 
 class ChattingFragment : Fragment() {
 
     lateinit var mainActivity: MainActivity
     lateinit var binding: FragmentChattingBinding
+
+    lateinit var viewModel: ChattingViewModel
 
     private lateinit var otherUser: User
 
@@ -27,6 +31,10 @@ class ChattingFragment : Fragment() {
         binding = FragmentChattingBinding.inflate(layoutInflater)
 
         otherUser = arguments?.getParcelable("otherUser") ?: User("", "", "")
+
+        viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
+
+        viewModel.createChattingRoom(CURRENT_USER_UID, otherUser)
 
         Log.d(TAG, otherUser.toString() )
 
