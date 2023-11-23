@@ -7,8 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.test.chatting.databinding.ItemUserListBinding
 import com.test.chatting.model.User
+import com.test.chatting.ui.main.MainActivity
 
-class UserListAdapter(private var allUserDataList : MutableList<User>) : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
+class UserListAdapter(
+    private val mainActivity: MainActivity,
+    private var allUserDataList : MutableList<User>) : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
 
     inner class UserListViewHolder(binding: ItemUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -21,6 +24,10 @@ class UserListAdapter(private var allUserDataList : MutableList<User>) : Recycle
             userProfile = binding.imageViewUserProfileUserList
             userName = binding.textViewUserNameUserList
             userDescription = binding.textViewUserDescriptionUserList
+
+            binding.root.setOnClickListener {
+                mainActivity.replaceFragment(MainActivity.CHATTING_FRAGMENT, true, null)
+            }
         }
 
     }

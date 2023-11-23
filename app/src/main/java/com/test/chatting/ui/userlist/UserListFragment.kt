@@ -51,7 +51,7 @@ class UserListFragment : Fragment() {
     private fun initRecyclerView() {
         val recyclerView = binding.recyclerViewUserList
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = UserListAdapter(allUserInfo)
+        recyclerView.adapter = UserListAdapter(mainActivity ,allUserInfo)
     }
 
 
