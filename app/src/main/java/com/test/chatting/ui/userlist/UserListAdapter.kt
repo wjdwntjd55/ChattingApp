@@ -1,5 +1,6 @@
 package com.test.chatting.ui.userlist
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -26,7 +27,13 @@ class UserListAdapter(
             userDescription = binding.textViewUserDescriptionUserList
 
             binding.root.setOnClickListener {
-                mainActivity.replaceFragment(MainActivity.CHATTING_FRAGMENT, true, null)
+
+                val otherUser = allUserDataList[adapterPosition]
+
+                val bundle = Bundle()
+                bundle.putParcelable("otherUser", otherUser)
+
+                mainActivity.replaceFragment(MainActivity.CHATTING_FRAGMENT, true, bundle)
             }
         }
 
