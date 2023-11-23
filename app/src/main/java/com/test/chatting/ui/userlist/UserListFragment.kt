@@ -36,6 +36,7 @@ class UserListFragment : Fragment() {
         viewModel.getAllUserInfo()
 
         viewModel.userListLiveData.observe(viewLifecycleOwner) { userList ->
+            allUserInfo.clear()
             userList.forEach { allUserInfo.add(it) }
 
             Log.d(TAG, "userList : ${userList}")
