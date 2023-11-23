@@ -22,7 +22,7 @@ class UserListRepository {
             for (userSnapshot in snapshot.children) {
                 val userId = userSnapshot.child("userId").getValue(String::class.java)
                 val userName = userSnapshot.child("userName").getValue(String::class.java)
-                val userDescription = userSnapshot.child("description").getValue(String::class.java)
+                val userDescription = userSnapshot.child("description").getValue(String::class.java) ?: ""
 
                 if (userId != LoginRepository.CURRENT_USER_UID && userId != null && userName != null) {
                     val user = User(userId, userName, userDescription)
@@ -35,7 +35,7 @@ class UserListRepository {
     }
 
     suspend fun getCurrentLoginUserInfo(currentUserUid : String): User {
-        var currentUserInfo = User()
+        var currentUserInfo = User("", "", "")
 
         val snapshot = db.reference.child(Key.DB_USERS)
             .child(currentUserUid)
@@ -44,9 +44,9 @@ class UserListRepository {
 
         if (snapshot.exists()) {
 
-            val currentUserUid = snapshot.child("userId").getValue(String::class.java)
-            val currentUserName = snapshot.child("userName").getValue(String::class.java)
-            val currentUserDescription = snapshot.child("description").getValue(String::class.java)
+            val currentUserUid = snapshot.child("userId").getValue(String::class.java) ?: ""
+            val currentUserName = snapshot.child("userName").getValue(String::class.java) ?: ""
+            val currentUserDescription = snapshot.child("description").getValue(String::class.java) ?: ""
 
             currentUserInfo = User(currentUserUid, currentUserName, currentUserDescription)
 
