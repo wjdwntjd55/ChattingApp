@@ -8,6 +8,7 @@ import com.test.chatting.model.ChattingRoomItem
 import com.test.chatting.model.Key
 import com.test.chatting.model.Key.Companion.DB_CHAT_ROOMS
 import com.test.chatting.model.User
+import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_EMAIL
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
@@ -58,6 +59,19 @@ class ChattingRepository {
 
         return newChattingItem
 
+    }
+
+    suspend fun updateInfo(currentUserUid: String, otherUser: User, chatRoomId: String, message: String) {
+
+        val updates: MutableMap<String, Any> = hashMapOf(
+            "${DB_CHAT_ROOMS}/$currentUserUid/${otherUser.userId}/lastMessage" to message,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/lastMessage" to message,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/chatRoomId" to chatRoomId,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserUid" to currentUserUid,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserName" to CURRENT_USER_EMAIL,
+        )
+
+        db.reference.updateChildren(updates).await()
     }
 
 

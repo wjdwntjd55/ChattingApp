@@ -23,6 +23,7 @@ class ChattingFragment : Fragment() {
 
     private lateinit var otherUser: User
     private lateinit var chatRoomId: String
+    private lateinit var otherUserUid: String
 
     val TAG = "ChattingFragment"
 
@@ -46,6 +47,7 @@ class ChattingFragment : Fragment() {
         viewModel.chattingRoomLiveData.observe(viewLifecycleOwner) { chattingRoomData ->
             Log.d(TAG, chattingRoomData.toString())
             chatRoomId = chattingRoomData.chatRoomId.toString()
+            otherUserUid = chattingRoomData.otherUserUid.toString()
         }
 
         initRecyclerView()
@@ -79,6 +81,8 @@ class ChattingFragment : Fragment() {
             }
 
             viewModel.createMessage(chatRoomId, message)
+
+            viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message)
 
         }
 
