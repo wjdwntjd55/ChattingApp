@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.test.chatting.databinding.FragmentChattingBinding
 import com.test.chatting.model.User
@@ -47,6 +48,7 @@ class ChattingFragment : Fragment() {
             chatRoomId = chattingRoomData.chatRoomId.toString()
         }
 
+        initRecyclerView()
         sendMessage()
 
         return binding.root
@@ -56,6 +58,12 @@ class ChattingFragment : Fragment() {
         super.onDestroy()
         
         mainActivity.showBottomNavigationView()
+    }
+
+    private fun initRecyclerView() {
+        val recyclerView = binding.recyclerViewChatting
+        recyclerView.adapter = ChattingAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     fun sendMessage() {
