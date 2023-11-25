@@ -21,4 +21,11 @@ class ChattingViewModel: ViewModel() {
         }
 
     }
+
+    fun createMessage(chatRoomId: String, message: String) {
+        viewModelScope.launch {
+            chattingRepository.createMessage(chatRoomId, message)
+        }
+    }
+
 }

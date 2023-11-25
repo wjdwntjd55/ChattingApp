@@ -3,7 +3,9 @@ package com.test.chatting.repository
 import android.util.Log
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.test.chatting.model.ChattingItem
 import com.test.chatting.model.ChattingRoomItem
+import com.test.chatting.model.Key
 import com.test.chatting.model.Key.Companion.DB_CHAT_ROOMS
 import com.test.chatting.model.User
 import kotlinx.coroutines.tasks.await
@@ -37,6 +39,25 @@ class ChattingRepository {
 
             return newChattingRoomItem
         }
+    }
+
+    suspend fun createMessage(chatRoomId: String, message: String): ChattingItem {
+
+        val newChattingItem = ChattingItem(
+            message = message,
+            userUid = LoginRepository.CURRENT_USER_UID
+        )
+
+        db.reference.child(Key.DB_CHATS).child(chatRoomId).push().apply {
+            newChattingItem.chatId = key
+            setValue(newChattingItem)
+                .await()
+        }
+
+        Log.d("ChattingRepository", "newChatItem : ${newChattingItem}")
+
+        return newChattingItem
+
     }
 
 
