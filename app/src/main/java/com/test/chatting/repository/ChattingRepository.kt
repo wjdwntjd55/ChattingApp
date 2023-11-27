@@ -1,6 +1,10 @@
 package com.test.chatting.repository
 
 import android.util.Log
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.test.chatting.model.ChattingItem
@@ -9,8 +13,12 @@ import com.test.chatting.model.Key
 import com.test.chatting.model.Key.Companion.DB_CHAT_ROOMS
 import com.test.chatting.model.User
 import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_EMAIL
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class ChattingRepository {
 
@@ -74,5 +82,41 @@ class ChattingRepository {
         db.reference.updateChildren(updates).await()
     }
 
+    fun getAllChattingData(chatRoomId: String, onDataReceived: (List<ChattingItem>) -> Unit) {
+        val chattingItemList = mutableListOf<ChattingItem>()
+
+        val chatReference = db.reference.child(Key.DB_CHATS).child(chatRoomId)
+
+        val childEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatId = snapshot.child("chatId").getValue(String::class.java)
+                val message = snapshot.child("message").getValue(String::class.java)
+                val userUid = snapshot.child("userUid").getValue(String::class.java)
+
+                val chattingItem = ChattingItem(chatId, userUid, message)
+                chattingItemList.add(chattingItem)
+
+                onDataReceived(chattingItemList)
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                // 변경 사항이 있을 경우 처리
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                // 삭제 사항이 있을 경우 처리
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                // 이동 사항이 있을 경우 처리
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // 취소가 발생한 경우 처리
+            }
+        }
+
+        chatReference.addChildEventListener(childEventListener)
+    }
 
 }

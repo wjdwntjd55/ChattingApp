@@ -58,8 +58,15 @@ class ChattingFragment : Fragment() {
             chatRoomId = chattingRoomData.chatRoomId.toString()
             otherUserUid = chattingRoomData.otherUserUid.toString()
 
-            getAllChattingData(chatRoomId)
+            viewModel.getAllChattingData(chatRoomId)
 
+        }
+
+        viewModel.chattingItemListLiveData.observe(viewLifecycleOwner) { chattingItemList ->
+            allChattingItemList.clear()
+            allChattingItemList.addAll(chattingItemList)
+
+            initRecyclerView()
         }
 
         sendMessage()
@@ -99,34 +106,5 @@ class ChattingFragment : Fragment() {
         }
 
     }
-
-    fun getAllChattingData(chatRoomId: String) {
-        Log.d(TAG, "getAllChattingData에서 받은 chatRoomId: $chatRoomId")
-
-        Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId)
-            .addChildEventListener(object : ChildEventListener {
-                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    val chatItem = snapshot.getValue(ChattingItem::class.java)
-                    chatItem ?: return
-
-                    Log.d(TAG, "chatItem: $chatItem")
-
-                    allChattingItemList.add(chatItem)
-                    Log.d(TAG, "allChattingItemList: $allChattingItemList")
-
-                    initRecyclerView()
-
-                }
-
-                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-
-                override fun onChildRemoved(snapshot: DataSnapshot) {}
-
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-
-                override fun onCancelled(error: DatabaseError) {}
-            })
-    }
-
 
 }
