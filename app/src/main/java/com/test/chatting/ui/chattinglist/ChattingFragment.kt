@@ -9,7 +9,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.test.chatting.databinding.FragmentChattingBinding
+import com.test.chatting.model.ChattingItem
+import com.test.chatting.model.Key
 import com.test.chatting.model.User
 import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_UID
 import com.test.chatting.ui.main.MainActivity
@@ -24,6 +31,8 @@ class ChattingFragment : Fragment() {
     private lateinit var otherUser: User
     private lateinit var chatRoomId: String
     private lateinit var otherUserUid: String
+
+    private val allChattingItemList = mutableListOf<ChattingItem>()
 
     val TAG = "ChattingFragment"
 
@@ -48,9 +57,11 @@ class ChattingFragment : Fragment() {
             Log.d(TAG, chattingRoomData.toString())
             chatRoomId = chattingRoomData.chatRoomId.toString()
             otherUserUid = chattingRoomData.otherUserUid.toString()
+
+            getAllChattingData(chatRoomId)
+
         }
 
-        initRecyclerView()
         sendMessage()
 
         return binding.root
@@ -64,7 +75,7 @@ class ChattingFragment : Fragment() {
 
     private fun initRecyclerView() {
         val recyclerView = binding.recyclerViewChatting
-        recyclerView.adapter = ChattingAdapter()
+        recyclerView.adapter = ChattingAdapter(otherUser, allChattingItemList)
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
@@ -83,9 +94,38 @@ class ChattingFragment : Fragment() {
             viewModel.createMessage(chatRoomId, message)
 
             viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message)
+            binding.editTextChattingMessage.text.clear()
 
         }
 
+    }
+
+    fun getAllChattingData(chatRoomId: String) {
+        Log.d(TAG, "getAllChattingData에서 받은 chatRoomId: $chatRoomId")
+
+        Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId)
+            .addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val chatItem = snapshot.getValue(ChattingItem::class.java)
+                    chatItem ?: return
+
+                    Log.d(TAG, "chatItem: $chatItem")
+
+                    allChattingItemList.add(chatItem)
+                    Log.d(TAG, "allChattingItemList: $allChattingItemList")
+
+                    initRecyclerView()
+
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
     }
 
 

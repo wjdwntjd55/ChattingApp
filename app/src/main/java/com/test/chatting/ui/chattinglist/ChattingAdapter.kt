@@ -1,13 +1,16 @@
 package com.test.chatting.ui.chattinglist
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.test.chatting.databinding.ItemChattingBinding
+import com.test.chatting.model.ChattingItem
+import com.test.chatting.model.User
 
-class ChattingAdapter: RecyclerView.Adapter<ChattingAdapter.ChattingViewHolder>() {
-
+class ChattingAdapter(val otherUserItem: User, private var allChattingItemList : MutableList<ChattingItem>): RecyclerView.Adapter<ChattingAdapter.ChattingViewHolder>() {
     inner class ChattingViewHolder(binding: ItemChattingBinding): RecyclerView.ViewHolder(binding.root) {
 
         val userName: TextView
@@ -33,12 +36,21 @@ class ChattingAdapter: RecyclerView.Adapter<ChattingAdapter.ChattingViewHolder>(
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return allChattingItemList.size
     }
 
     override fun onBindViewHolder(holder: ChattingViewHolder, position: Int) {
-        holder.userName.text = "홍길동"
-        holder.message.text = "안녕!!"
+
+        if (allChattingItemList[position].userUid == otherUserItem.userId) {
+            holder.userName.text = otherUserItem.username
+            holder.message.text = allChattingItemList[position].message
+            holder.message.gravity = Gravity.START
+        } else {
+            holder.userName.isVisible = false
+            holder.message.text = allChattingItemList[position].message
+            holder.message.gravity = Gravity.END
+        }
+
     }
 
 }
