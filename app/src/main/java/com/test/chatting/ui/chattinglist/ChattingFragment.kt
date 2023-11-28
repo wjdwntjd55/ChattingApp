@@ -85,7 +85,10 @@ class ChattingFragment : Fragment() {
         recyclerView.adapter = ChattingAdapter(otherUser, allChattingItemList)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        recyclerView.smoothScrollToPosition(allChattingItemList.size - 1)
+        val lastItemPosition = allChattingItemList.size - 1
+        if (lastItemPosition >= 0) {
+            recyclerView.scrollToPosition(lastItemPosition)
+        }
     }
 
     fun sendMessage() {
