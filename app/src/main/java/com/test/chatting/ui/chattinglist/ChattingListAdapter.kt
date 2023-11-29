@@ -11,7 +11,7 @@ import com.test.chatting.ui.main.MainActivity
 
 class ChattingListAdapter(
     private val mainActivity: MainActivity,
-    private var allUserDataList : MutableList<ChattingRoomItem>): RecyclerView.Adapter<ChattingListAdapter.ChattingListViewHolder>() {
+    private var allMyChattingRoomDataList : MutableList<ChattingRoomItem>): RecyclerView.Adapter<ChattingListAdapter.ChattingListViewHolder>() {
 
     inner class ChattingListViewHolder(binding: ItemChattingListBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -40,12 +40,12 @@ class ChattingListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return allUserDataList.size
+        return allMyChattingRoomDataList.size
     }
 
     override fun onBindViewHolder(holder: ChattingListViewHolder, position: Int) {
-        holder.userName.text = allUserDataList[position].otherUserName
-        holder.lastMessage.text = allUserDataList[position].lastMessage
+        holder.userName.text = allMyChattingRoomDataList[position].otherUserName
+        holder.lastMessage.text = allMyChattingRoomDataList[position].lastMessage
     }
 
 }
