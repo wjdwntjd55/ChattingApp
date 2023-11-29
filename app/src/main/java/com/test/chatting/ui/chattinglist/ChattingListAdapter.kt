@@ -1,5 +1,6 @@
 package com.test.chatting.ui.chattinglist
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.test.chatting.databinding.ItemChattingListBinding
 import com.test.chatting.model.ChattingRoomItem
+import com.test.chatting.model.User
 import com.test.chatting.ui.main.MainActivity
 
 class ChattingListAdapter(
@@ -23,6 +25,21 @@ class ChattingListAdapter(
             userProfile = binding.imageViewUserProfileChattingList
             userName = binding.textViewUserNameChattingList
             lastMessage = binding.textViewLastMessageChattingList
+
+            binding.root.setOnClickListener {
+
+                val otherUserName = allMyChattingRoomDataList[adapterPosition].otherUserName
+                val otherUserUid = allMyChattingRoomDataList[adapterPosition].otherUserUid
+
+                val otherUser = User(userId = otherUserUid!!, username = otherUserName!!, description = "")
+
+                val bundle = Bundle()
+                bundle.putParcelable("otherUser", otherUser)
+
+                mainActivity.replaceFragment(MainActivity.CHATTING_FRAGMENT, true, bundle)
+
+            }
+
         }
     }
 
