@@ -119,4 +119,26 @@ class ChattingRepository {
         chatReference.addChildEventListener(childEventListener)
     }
 
+    suspend fun getMyChattingRoom(currentUserUid: String): MutableList<ChattingRoomItem> {
+        val myChattingRoomList = mutableListOf<ChattingRoomItem>()
+
+        val snapshot = db.reference.child(DB_CHAT_ROOMS).child(currentUserUid)
+            .get()
+            .await()
+
+        if (snapshot.exists()) {
+            for (chattingRoomSnapshot in snapshot.children) {
+                val myChattingRoomItem = chattingRoomSnapshot.getValue(ChattingRoomItem::class.java)
+
+                if (myChattingRoomItem != null) {
+                    myChattingRoomList.add(myChattingRoomItem)
+                }
+
+                myChattingRoomList.sortBy { it.otherUserName }
+            }
+        }
+
+        return myChattingRoomList
+    }
+
 }

@@ -6,8 +6,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.test.chatting.databinding.ItemChattingListBinding
+import com.test.chatting.model.ChattingRoomItem
+import com.test.chatting.ui.main.MainActivity
 
-class ChattingListAdapter: RecyclerView.Adapter<ChattingListAdapter.ChattingListViewHolder>() {
+class ChattingListAdapter(
+    private val mainActivity: MainActivity,
+    private var allUserDataList : MutableList<ChattingRoomItem>): RecyclerView.Adapter<ChattingListAdapter.ChattingListViewHolder>() {
 
     inner class ChattingListViewHolder(binding: ItemChattingListBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -36,12 +40,12 @@ class ChattingListAdapter: RecyclerView.Adapter<ChattingListAdapter.ChattingList
     }
 
     override fun getItemCount(): Int {
-        return 20
+        return allUserDataList.size
     }
 
     override fun onBindViewHolder(holder: ChattingListViewHolder, position: Int) {
-        holder.userName.text = "홍길동"
-        holder.lastMessage.text = "마지막 메시지 입니다"
+        holder.userName.text = allUserDataList[position].otherUserName
+        holder.lastMessage.text = allUserDataList[position].lastMessage
     }
 
 }
