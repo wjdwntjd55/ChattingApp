@@ -19,6 +19,15 @@ class LoginRepository {
                     if (user != null) {
                         CURRENT_USER_UID = user.uid
                         CURRENT_USER_EMAIL = user.email.toString()
+
+                        val userId = CURRENT_USER_UID
+                        val userEmail = CURRENT_USER_EMAIL
+
+                        val currentUserInfo = mutableMapOf<String, Any>()
+                        currentUserInfo["userId"] = userId
+                        currentUserInfo["userName"] = userEmail
+
+                        updateUserInDatabase(userId, currentUserInfo)
                     }
                     callback(true)
                 } else {
