@@ -1,8 +1,10 @@
 package com.test.chatting.repository
 
+import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.test.chatting.model.Key.Companion.DB_URL
 import com.test.chatting.model.Key.Companion.DB_USERS
 
@@ -20,14 +22,19 @@ class LoginRepository {
                         CURRENT_USER_UID = user.uid
                         CURRENT_USER_EMAIL = user.email.toString()
 
-                        val userId = CURRENT_USER_UID
-                        val userEmail = CURRENT_USER_EMAIL
+                        Firebase.messaging.token.addOnCompleteListener {
+                            val token = it.result
+                            val userId = CURRENT_USER_UID
+                            val userEmail = CURRENT_USER_EMAIL
 
-                        val currentUserInfo = mutableMapOf<String, Any>()
-                        currentUserInfo["userId"] = userId
-                        currentUserInfo["userName"] = userEmail
+                            val currentUserInfo = mutableMapOf<String, Any>()
+                            currentUserInfo["userId"] = userId
+                            currentUserInfo["userName"] = userEmail
+                            currentUserInfo["fcmToken"] = token
+                            
+                            updateUserInDatabase(userId, currentUserInfo)
+                        }
 
-                        updateUserInDatabase(userId, currentUserInfo)
                     }
                     callback(true)
                 } else {
