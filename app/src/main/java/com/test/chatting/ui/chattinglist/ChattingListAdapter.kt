@@ -31,7 +31,7 @@ class ChattingListAdapter(
                 val otherUserName = allMyChattingRoomDataList[adapterPosition].otherUserName
                 val otherUserUid = allMyChattingRoomDataList[adapterPosition].otherUserUid
 
-                val otherUser = User(userId = otherUserUid!!, username = otherUserName!!, description = "")
+                val otherUser = User(userId = otherUserUid!!, username = otherUserName!!, description = "", fcmToken = "")
 
                 val bundle = Bundle()
                 bundle.putParcelable("otherUser", otherUser)

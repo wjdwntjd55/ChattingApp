@@ -6,9 +6,11 @@ import android.os.Parcelable
 data class User(
     val userId: String,
     val username: String,
-    val description: String
+    val description: String,
+    val fcmToken: String,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: ""
@@ -18,6 +20,7 @@ data class User(
         parcel.writeString(userId)
         parcel.writeString(username)
         parcel.writeString(description)
+        parcel.writeString(fcmToken)
     }
 
     override fun describeContents(): Int {
