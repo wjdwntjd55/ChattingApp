@@ -14,12 +14,23 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.test.chatting.BuildConfig
+import com.test.chatting.R
 import com.test.chatting.databinding.FragmentChattingBinding
 import com.test.chatting.model.ChattingItem
 import com.test.chatting.model.Key
 import com.test.chatting.model.User
 import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_UID
 import com.test.chatting.ui.main.MainActivity
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class ChattingFragment : Fragment() {
 
@@ -108,8 +119,38 @@ class ChattingFragment : Fragment() {
             viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message)
             binding.editTextChattingMessage.text.clear()
 
+            sendFCM(message, otherUser.fcmToken)
+
         }
 
+    }
+
+    fun sendFCM(message: String, fcmToken: String) {
+
+        val client = OkHttpClient()
+
+        val root = JSONObject()
+        val notification = JSONObject()
+        notification.put("title", getString(R.string.app_name))
+        notification.put("body", message)
+
+        root.put("to", fcmToken)
+        root.put("priority", "high")
+        root.put("notification", notification)
+
+        val requestBody = root.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+        val request = Request.Builder().post(requestBody).url("https://fcm.googleapis.com/fcm/send")
+            .header("Authorization", "key=${BuildConfig.FCM_SERVER_KEY}").build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.stackTraceToString()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                Log.d(TAG, response.toString())
+            }
+        })
     }
 
 }

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,10 @@ android {
     namespace = "com.test.chatting"
     compileSdk = 34
 
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+    val fcmServerKey = properties["FCM_SERVER_KEY"] ?: ""
+
     defaultConfig {
         applicationId = "com.test.chatting"
         minSdk = 24
@@ -16,6 +22,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "FCM_SERVER_KEY", "$fcmServerKey")
     }
 
     buildTypes {
@@ -36,6 +44,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -64,4 +73,7 @@ dependencies {
 
     // viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
+    // okhttp3
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }
