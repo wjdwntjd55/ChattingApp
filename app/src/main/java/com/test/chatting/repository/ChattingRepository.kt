@@ -35,12 +35,13 @@ class ChattingRepository {
             return ChattingRoomItem(
                 chatRoomId = snapshot.child("chatRoomId").getValue(String::class.java),
                 otherUserUid = snapshot.child("otherUserUid").getValue(String::class.java),
-                otherUserName = snapshot.child("otherUserName").getValue(String::class.java)
+                otherUserName = snapshot.child("otherUserName").getValue(String::class.java),
+                otherUserFcmToken = snapshot.child("otherUserFcmToken").getValue(String::class.java)
             )
         } else {
             // 채팅방이 없는 경우
             val chatRoomId = UUID.randomUUID().toString()
-            val newChattingRoomItem = ChattingRoomItem(chatRoomId = chatRoomId, otherUserUid = otherUserUid.userId, otherUserName = otherUserUid.username)
+            val newChattingRoomItem = ChattingRoomItem(chatRoomId = chatRoomId, otherUserUid = otherUserUid.userId, otherUserName = otherUserUid.username, otherUserFcmToken = otherUserUid.fcmToken)
 
             db.reference.child(DB_CHAT_ROOMS).child(currentUserUid).child(otherUserUid.userId)
                 .setValue(newChattingRoomItem)
