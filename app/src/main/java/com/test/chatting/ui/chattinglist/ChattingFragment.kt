@@ -38,6 +38,7 @@ class ChattingFragment : Fragment() {
     lateinit var binding: FragmentChattingBinding
 
     lateinit var viewModel: ChattingViewModel
+    lateinit var fcmViewModel: FCMViewModel
 
     private lateinit var otherUser: User
     private lateinit var chatRoomId: String
@@ -59,6 +60,7 @@ class ChattingFragment : Fragment() {
         otherUser = arguments?.getParcelable("otherUser") ?: User("", "", "", "")
 
         viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
+        fcmViewModel = ViewModelProvider(this, FCMViewModelFactory(requireContext()))[FCMViewModel::class.java]
 
         viewModel.createChattingRoom(CURRENT_USER_UID, otherUser)
 
@@ -119,38 +121,10 @@ class ChattingFragment : Fragment() {
             viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message)
             binding.editTextChattingMessage.text.clear()
 
-            sendFCM(message, otherUser.fcmToken)
+            fcmViewModel.sendFCM(message, otherUser.fcmToken)
 
         }
 
-    }
-
-    fun sendFCM(message: String, fcmToken: String) {
-
-        val client = OkHttpClient()
-
-        val root = JSONObject()
-        val notification = JSONObject()
-        notification.put("title", getString(R.string.app_name))
-        notification.put("body", message)
-
-        root.put("to", fcmToken)
-        root.put("priority", "high")
-        root.put("notification", notification)
-
-        val requestBody = root.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
-        val request = Request.Builder().post(requestBody).url("https://fcm.googleapis.com/fcm/send")
-            .header("Authorization", "key=${BuildConfig.FCM_SERVER_KEY}").build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.stackTraceToString()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                Log.d(TAG, response.toString())
-            }
-        })
     }
 
 }
