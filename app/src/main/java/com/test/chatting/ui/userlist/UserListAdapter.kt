@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.test.chatting.databinding.ItemUserListBinding
 import com.test.chatting.model.User
 import com.test.chatting.ui.main.MainActivity
@@ -58,6 +59,13 @@ class UserListAdapter(
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         holder.userName.text = allUserDataList[position].username
         holder.userDescription.text = allUserDataList[position].description
+
+        if (allUserDataList[position].userProfile.isNotEmpty()) {
+            Glide.with(mainActivity)
+                .load(allUserDataList[position].userProfile)
+                .into(holder.userProfile)
+        }
+
     }
 
 }

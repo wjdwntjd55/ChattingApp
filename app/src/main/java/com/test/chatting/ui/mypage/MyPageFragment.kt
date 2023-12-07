@@ -11,6 +11,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.test.chatting.R
@@ -70,9 +71,11 @@ class MyPageFragment : Fragment() {
 
             binding.editTextMyPageDescription.setText(userInfo.description)
 
-            Glide.with(this)
-                .load(userInfo.userProfile)
-                .into(binding.imageViewMyPageUserProfile)
+            if (userInfo.userProfile.isNotEmpty()) {
+                Glide.with(this)
+                    .load(userInfo.userProfile)
+                    .into(binding.imageViewMyPageUserProfile)
+            }
 
         }
 
@@ -100,6 +103,7 @@ class MyPageFragment : Fragment() {
             viewModel.upDateDescription(description)
 
             mainActivity.hideKeyboard()
+            Snackbar.make(binding.root, "변경되었습니다", Snackbar.LENGTH_LONG).show()
 
         }
 
