@@ -57,7 +57,7 @@ class ChattingFragment : Fragment() {
 
         mainActivity.hideBottomNavigationView()
 
-        otherUser = arguments?.getParcelable("otherUser") ?: User("", "", "", "")
+        otherUser = arguments?.getParcelable("otherUser") ?: User("", "", "", "", "")
 
         viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
         fcmViewModel = ViewModelProvider(this, FCMViewModelFactory(requireContext()))[FCMViewModel::class.java]

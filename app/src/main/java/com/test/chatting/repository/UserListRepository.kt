@@ -28,9 +28,10 @@ class UserListRepository {
                 val userName = userSnapshot.child("userName").getValue(String::class.java)
                 val userDescription = userSnapshot.child("description").getValue(String::class.java) ?: ""
                 val fcmToken = userSnapshot.child("fcmToken").getValue(String::class.java) ?: ""
+                val userProfile = userSnapshot.child("userProfile").getValue(String::class.java) ?: ""
 
                 if (userId != LoginRepository.CURRENT_USER_UID && userId != null && userName != null) {
-                    val user = User(userId, userName, userDescription, fcmToken)
+                    val user = User(userId, userName, userDescription, fcmToken, userProfile)
                     userList.add(user)
                 }
             }
@@ -40,7 +41,7 @@ class UserListRepository {
     }
 
     suspend fun getCurrentLoginUserInfo(currentUserUid : String): User {
-        var currentUserInfo = User("", "", "", "")
+        var currentUserInfo = User("", "", "", "", "")
 
         val snapshot = db.reference.child(Key.DB_USERS)
             .child(currentUserUid)
@@ -53,8 +54,9 @@ class UserListRepository {
             val currentUserName = snapshot.child("userName").getValue(String::class.java) ?: ""
             val currentUserDescription = snapshot.child("description").getValue(String::class.java) ?: ""
             val currentUserFcmToken = snapshot.child("fcmToken").getValue(String::class.java) ?: ""
+            val currentUserProfile = snapshot.child("userProfile").getValue(String::class.java) ?: ""
 
-            currentUserInfo = User(currentUserUid, currentUserName, currentUserDescription, currentUserFcmToken)
+            currentUserInfo = User(currentUserUid, currentUserName, currentUserDescription, currentUserFcmToken, currentUserProfile)
 
         }
 

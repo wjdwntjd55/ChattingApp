@@ -8,12 +8,14 @@ data class User(
     val username: String,
     val description: String,
     val fcmToken: String,
+    val userProfile: String,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readString() ?: ""
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -21,6 +23,7 @@ data class User(
         parcel.writeString(username)
         parcel.writeString(description)
         parcel.writeString(fcmToken)
+        parcel.writeString(userProfile)
     }
 
     override fun describeContents(): Int {
