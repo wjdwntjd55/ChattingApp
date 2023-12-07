@@ -1,15 +1,19 @@
 package com.test.chatting.repository
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.test.chatting.model.Key
 import com.test.chatting.model.User
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 
 class UserListRepository {
 
     private val db = Firebase.database
+    private val storage = Firebase.storage
 
     suspend fun getAllUserInfo(): MutableList<User> {
         val userList = mutableListOf<User>()
@@ -55,6 +59,38 @@ class UserListRepository {
         }
 
         return currentUserInfo
+    }
+
+    suspend fun upLoadImage(imageUri: Uri?) {
+
+        val fileName = "${UUID.randomUUID()}.jpg"
+
+        if (imageUri != null) {
+            storage.reference.child("images/${fileName}")
+                .putFile(imageUri)
+                .await()
+
+            upDateUserProfile(fileName)
+        }
+
+    }
+
+    fun upDateUserProfile(fileName: String) {
+
+        storage.reference.child("images/${fileName}")
+            .downloadUrl
+            .addOnSuccessListener { uri ->
+
+                val downloadUrl = uri.toString()
+
+                val userProfileInfo = mutableMapOf<String, Any>()
+                userProfileInfo["userProfile"] = downloadUrl
+
+                db.reference.child(Key.DB_USERS)
+                    .child(LoginRepository.CURRENT_USER_UID)
+                    .updateChildren(userProfileInfo)
+            }
+
     }
 
     fun upDateDescription(description : String) {

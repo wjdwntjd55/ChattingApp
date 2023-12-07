@@ -32,6 +32,7 @@ class MyPageFragment : Fragment() {
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         // Callback is invoked after th user selects a media item or closes the photo picker.
         if (uri != null) {
+            viewModel.updateSelectedUri(uri)
             binding.imageViewMyPageUserProfile.setImageURI(uri)
             Log.d(TAG, "Selected URI: $uri")
         } else {
@@ -84,6 +85,12 @@ class MyPageFragment : Fragment() {
 
         binding.buttonMyPageApply.setOnClickListener {
             val description = binding.editTextMyPageDescription.text.toString()
+
+            if (viewModel.selectedUri.value != null) {
+                val photoUri = viewModel.selectedUri.value ?: return@setOnClickListener
+
+                viewModel.upLoadImage(photoUri)
+            }
 
             viewModel.upDateDescription(description)
 
