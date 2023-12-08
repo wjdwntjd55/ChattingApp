@@ -6,5 +6,6 @@ data class ChattingRoomItem(
     val otherUserName: String? = null,
     val otherUserUid: String? = null,
     val otherUserFcmToken: String? = null,
+    val otherUserProfile: String? = null,
 )
 
