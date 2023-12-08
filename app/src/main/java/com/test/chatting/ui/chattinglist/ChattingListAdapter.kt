@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.test.chatting.databinding.ItemChattingListBinding
 import com.test.chatting.model.ChattingRoomItem
 import com.test.chatting.model.User
@@ -28,10 +29,11 @@ class ChattingListAdapter(
 
             binding.root.setOnClickListener {
 
+                val otherUserProfile = allMyChattingRoomDataList[adapterPosition].otherUserProfile
                 val otherUserName = allMyChattingRoomDataList[adapterPosition].otherUserName
                 val otherUserUid = allMyChattingRoomDataList[adapterPosition].otherUserUid
 
-                val otherUser = User(userId = otherUserUid!!, username = otherUserName!!, description = "", fcmToken = "", userProfile = "")
+                val otherUser = User(userId = otherUserUid!!, username = otherUserName!!, description = "", fcmToken = "", userProfile = otherUserProfile!!)
 
                 val bundle = Bundle()
                 bundle.putParcelable("otherUser", otherUser)
@@ -61,6 +63,12 @@ class ChattingListAdapter(
     }
 
     override fun onBindViewHolder(holder: ChattingListViewHolder, position: Int) {
+        if (!allMyChattingRoomDataList[position].otherUserProfile.isNullOrBlank()) {
+            Glide.with(mainActivity)
+                .load(allMyChattingRoomDataList[position].otherUserProfile)
+                .into(holder.userProfile)
+        }
+
         holder.userName.text = allMyChattingRoomDataList[position].otherUserName
         holder.lastMessage.text = allMyChattingRoomDataList[position].lastMessage
     }
