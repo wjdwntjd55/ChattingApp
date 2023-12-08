@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.test.chatting.model.ChattingItem
@@ -13,10 +12,8 @@ import com.test.chatting.model.Key
 import com.test.chatting.model.Key.Companion.DB_CHAT_ROOMS
 import com.test.chatting.model.User
 import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_EMAIL
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
-import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
@@ -32,16 +29,23 @@ class ChattingRepository {
 
         if (snapshot.exists()) {
             // 이미 채팅방이 존재하는 경우
-            return ChattingRoomItem(
+            val currentChattingRoomItem = ChattingRoomItem(
                 chatRoomId = snapshot.child("chatRoomId").getValue(String::class.java),
                 otherUserUid = snapshot.child("otherUserUid").getValue(String::class.java),
                 otherUserName = snapshot.child("otherUserName").getValue(String::class.java),
-                otherUserFcmToken = snapshot.child("otherUserFcmToken").getValue(String::class.java)
+                otherUserFcmToken = snapshot.child("otherUserFcmToken").getValue(String::class.java),
+                otherUserProfile = otherUserUid.userProfile
             )
+
+            db.reference.child(DB_CHAT_ROOMS).child(currentUserUid).child(otherUserUid.userId)
+                .setValue(currentChattingRoomItem)
+                .await()
+
+            return currentChattingRoomItem
         } else {
             // 채팅방이 없는 경우
             val chatRoomId = UUID.randomUUID().toString()
-            val newChattingRoomItem = ChattingRoomItem(chatRoomId = chatRoomId, otherUserUid = otherUserUid.userId, otherUserName = otherUserUid.username, otherUserFcmToken = otherUserUid.fcmToken)
+            val newChattingRoomItem = ChattingRoomItem(chatRoomId = chatRoomId, otherUserUid = otherUserUid.userId, otherUserName = otherUserUid.username, otherUserFcmToken = otherUserUid.fcmToken, otherUserProfile = otherUserUid.userProfile)
 
             db.reference.child(DB_CHAT_ROOMS).child(currentUserUid).child(otherUserUid.userId)
                 .setValue(newChattingRoomItem)
@@ -70,7 +74,7 @@ class ChattingRepository {
 
     }
 
-    suspend fun updateInfo(currentUserUid: String, otherUser: User, chatRoomId: String, message: String) {
+    suspend fun updateInfo(currentUserUid: String, otherUser: User, chatRoomId: String, message: String, otherUserProfile: String) {
 
         val updates: MutableMap<String, Any> = hashMapOf(
             "${DB_CHAT_ROOMS}/$currentUserUid/${otherUser.userId}/lastMessage" to message,
@@ -78,6 +82,7 @@ class ChattingRepository {
             "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/chatRoomId" to chatRoomId,
             "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserUid" to currentUserUid,
             "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserName" to CURRENT_USER_EMAIL,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserProfile" to otherUserProfile,
         )
 
         db.reference.updateChildren(updates).await()
