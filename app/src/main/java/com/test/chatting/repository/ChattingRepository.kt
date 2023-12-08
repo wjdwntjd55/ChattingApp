@@ -31,6 +31,7 @@ class ChattingRepository {
             // 이미 채팅방이 존재하는 경우
             val currentChattingRoomItem = ChattingRoomItem(
                 chatRoomId = snapshot.child("chatRoomId").getValue(String::class.java),
+                lastMessage = snapshot.child("lastMessage").getValue(String::class.java),
                 otherUserUid = snapshot.child("otherUserUid").getValue(String::class.java),
                 otherUserName = snapshot.child("otherUserName").getValue(String::class.java),
                 otherUserFcmToken = snapshot.child("otherUserFcmToken").getValue(String::class.java),
