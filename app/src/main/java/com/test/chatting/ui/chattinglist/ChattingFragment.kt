@@ -22,6 +22,7 @@ import com.test.chatting.model.Key
 import com.test.chatting.model.User
 import com.test.chatting.repository.LoginRepository.Companion.CURRENT_USER_UID
 import com.test.chatting.ui.main.MainActivity
+import com.test.chatting.ui.mypage.MyPageViewModel
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
@@ -39,10 +40,12 @@ class ChattingFragment : Fragment() {
 
     lateinit var viewModel: ChattingViewModel
     lateinit var fcmViewModel: FCMViewModel
+    lateinit var myPageViewModel: MyPageViewModel
 
     private lateinit var otherUser: User
     private lateinit var chatRoomId: String
     private lateinit var otherUserUid: String
+    private lateinit var currentUser: User
 
     private val allChattingItemList = mutableListOf<ChattingItem>()
 
@@ -61,8 +64,10 @@ class ChattingFragment : Fragment() {
 
         viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
         fcmViewModel = ViewModelProvider(this, FCMViewModelFactory(requireContext()))[FCMViewModel::class.java]
+        myPageViewModel = ViewModelProvider(this)[MyPageViewModel::class.java]
 
         viewModel.createChattingRoom(CURRENT_USER_UID, otherUser)
+        myPageViewModel.getCurrentLoginUserInfo(CURRENT_USER_UID)
 
         Log.d(TAG, otherUser.toString() )
 
@@ -80,6 +85,10 @@ class ChattingFragment : Fragment() {
             allChattingItemList.addAll(chattingItemList)
 
             initRecyclerView()
+        }
+
+        myPageViewModel.currentUserLiveData.observe(viewLifecycleOwner) { userInfo ->
+            currentUser = userInfo
         }
 
         sendMessage()
@@ -118,7 +127,7 @@ class ChattingFragment : Fragment() {
 
             viewModel.createMessage(chatRoomId, message)
 
-            viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message, otherUser.userProfile)
+            viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message, currentUser.userProfile)
             binding.editTextChattingMessage.text.clear()
 
             fcmViewModel.sendFCM(message, otherUser.fcmToken)
