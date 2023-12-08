@@ -30,9 +30,9 @@ class ChattingViewModel: ViewModel() {
         }
     }
 
-    fun updateInfo(currentUserUid: String, otherUserUid: User, chatRoomId: String, message: String, otherUserProfile: String) {
+    fun updateInfo(currentUser: User, otherUserUid: User, chatRoomId: String, message: String, otherUserProfile: String) {
         viewModelScope.launch {
-            chattingRepository.updateInfo(currentUserUid, otherUserUid, chatRoomId, message, otherUserProfile)
+            chattingRepository.updateInfo(currentUser, otherUserUid, chatRoomId, message, otherUserProfile)
         }
     }
 

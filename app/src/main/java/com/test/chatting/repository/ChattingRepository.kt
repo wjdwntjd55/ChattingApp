@@ -75,15 +75,17 @@ class ChattingRepository {
 
     }
 
-    suspend fun updateInfo(currentUserUid: String, otherUser: User, chatRoomId: String, message: String, otherUserProfile: String) {
+    suspend fun updateInfo(currentUser: User, otherUser: User, chatRoomId: String, message: String, otherUserProfile: String) {
 
         val updates: MutableMap<String, Any> = hashMapOf(
-            "${DB_CHAT_ROOMS}/$currentUserUid/${otherUser.userId}/lastMessage" to message,
-            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/lastMessage" to message,
-            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/chatRoomId" to chatRoomId,
-            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserUid" to currentUserUid,
-            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserName" to CURRENT_USER_EMAIL,
-            "${DB_CHAT_ROOMS}/${otherUser.userId}/$currentUserUid/otherUserProfile" to otherUserProfile,
+            "${DB_CHAT_ROOMS}/${currentUser.userId}/${otherUser.userId}/lastMessage" to message,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/${currentUser.userId}/lastMessage" to message,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/${currentUser.userId}/chatRoomId" to chatRoomId,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/${currentUser.userId}/otherUserUid" to currentUser.userId,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/${currentUser.userId}/otherUserName" to CURRENT_USER_EMAIL,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/${currentUser.userId}/otherUserProfile" to otherUserProfile,
+            "${DB_CHAT_ROOMS}/${otherUser.userId}/${currentUser.userId}/otherUserFcmToken" to currentUser.fcmToken,
+
         )
 
         db.reference.updateChildren(updates).await()

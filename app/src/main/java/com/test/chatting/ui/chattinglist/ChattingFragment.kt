@@ -127,7 +127,7 @@ class ChattingFragment : Fragment() {
 
             viewModel.createMessage(chatRoomId, message)
 
-            viewModel.updateInfo(CURRENT_USER_UID, otherUser, chatRoomId, message, currentUser.userProfile)
+            viewModel.updateInfo(currentUser, otherUser, chatRoomId, message, currentUser.userProfile)
             binding.editTextChattingMessage.text.clear()
 
             fcmViewModel.sendFCM(message, otherUser.fcmToken)
