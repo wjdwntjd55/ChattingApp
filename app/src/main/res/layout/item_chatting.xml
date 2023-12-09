@@ -32,15 +32,17 @@
 
     <TextView
         android:id="@+id/textView_message_chatting_item"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_rect_gray_r15"
+        android:padding="10dp"
+        android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/circleImageView_user_profile_chatiting_item"
         app:layout_constraintTop_toBottomOf="@id/textView_username_chatting_item"
-        tools:text="메시지" />
+        tools:text="안녕하세요\n 반가워요~~ 친하게 지내요" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
