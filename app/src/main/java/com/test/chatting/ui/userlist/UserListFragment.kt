@@ -44,9 +44,15 @@ class UserListFragment : Fragment() {
 
         }
 
-
+        initToolbar()
 
         return binding.root
+    }
+
+    private fun initToolbar() {
+        val toolbar = binding.materialToolbarUserList
+        toolbar.title = "유저 리스트"
+        toolbar.setTitleTextAppearance(context, R.style.Typography_Medium24)
     }
 
     private fun initRecyclerView() {
