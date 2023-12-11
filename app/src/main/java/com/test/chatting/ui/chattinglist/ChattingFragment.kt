@@ -91,6 +91,7 @@ class ChattingFragment : Fragment() {
             currentUser = userInfo
         }
 
+        initToolbar()
         sendMessage()
 
         return binding.root
@@ -100,6 +101,17 @@ class ChattingFragment : Fragment() {
         super.onDestroy()
         
         mainActivity.showBottomNavigationView()
+    }
+
+    private fun initToolbar() {
+        val toolbar = binding.materialToolbarChatting
+        toolbar.title = otherUser.username
+        toolbar.setTitleTextAppearance(context, R.style.Typography_Medium24)
+
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
+        toolbar.setNavigationOnClickListener {
+            mainActivity.removeFragment(MainActivity.CHATTING_FRAGMENT)
+        }
     }
 
     private fun initRecyclerView() {
