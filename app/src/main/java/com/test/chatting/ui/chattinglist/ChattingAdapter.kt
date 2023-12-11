@@ -8,11 +8,12 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.test.chatting.databinding.ItemChattingMyBinding
 import com.test.chatting.databinding.ItemChattingOtherBinding
 import com.test.chatting.model.ChattingItem
 import com.test.chatting.model.User
 
-class ChattingAdapter(val otherUserItem: User, private var allChattingItemList : MutableList<ChattingItem>): RecyclerView.Adapter<ChattingAdapter.ChattingViewHolder>() {
+class ChattingAdapter(val otherUserItem: User, private var allChattingItemList : MutableList<ChattingItem>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ChattingViewHolder(binding: ItemChattingOtherBinding): RecyclerView.ViewHolder(binding.root) {
 
         val userProfile: ImageView
@@ -27,43 +28,80 @@ class ChattingAdapter(val otherUserItem: User, private var allChattingItemList :
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChattingViewHolder {
-        val binding = ItemChattingOtherBinding.inflate(LayoutInflater.from(parent.context))
-        val chattingViewHolder = ChattingViewHolder(binding)
+    // 유저 자신 채팅
+    inner class MyChattingViewHolder(itemChattingMyBinding: ItemChattingMyBinding): RecyclerView.ViewHolder(itemChattingMyBinding.root) {
 
-        binding.root.layoutParams = ViewGroup.LayoutParams(
+        val message: TextView
+
+        init {
+            message = itemChattingMyBinding.textViewMessageChattingItemMy
+        }
+
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (allChattingItemList[position].userUid == otherUserItem.userId) {
+            CHATTING_ROOM_OWNER_OTHER
+        } else {
+            CHATTING_ROOM_OWNER_MY
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val binding = ItemChattingOtherBinding.inflate(LayoutInflater.from(parent.context))
+        val itemChattingMyBinding = ItemChattingMyBinding.inflate(LayoutInflater.from(parent.context))
+
+        val chattingViewHolder = ChattingViewHolder(binding)
+        val myChattingViewHolder = MyChattingViewHolder(itemChattingMyBinding)
+
+        val params = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        return chattingViewHolder
+        binding.root.layoutParams = params
+        itemChattingMyBinding.root.layoutParams = params
+
+        return if(viewType == CHATTING_ROOM_OWNER_OTHER){
+            chattingViewHolder
+        }else {
+            myChattingViewHolder
+        }
     }
 
     override fun getItemCount(): Int {
         return allChattingItemList.size
     }
 
-    override fun onBindViewHolder(holder: ChattingViewHolder, position: Int) {
-        val context = holder.itemView.context
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        if (allChattingItemList[position].userUid == otherUserItem.userId) {
-            
-            if (otherUserItem.userProfile.isNotEmpty()) {
-                Glide.with(context)
-                    .load(otherUserItem.userProfile)
-                    .into(holder.userProfile)
+        when(holder){
+            is ChattingViewHolder -> {
+
+                val context = holder.itemView.context
+
+                if (otherUserItem.userProfile.isNotEmpty()) {
+                    Glide.with(context)
+                        .load(otherUserItem.userProfile)
+                        .into(holder.userProfile)
+                }
+
+                holder.userName.text = otherUserItem.username
+                holder.message.text = allChattingItemList[position].message
+                holder.message.gravity = Gravity.START
             }
 
-            holder.userName.text = otherUserItem.username
-            holder.message.text = allChattingItemList[position].message
-            holder.message.gravity = Gravity.START
-        } else {
-            holder.userProfile.isVisible = false
-            holder.userName.isVisible = false
-            holder.message.text = allChattingItemList[position].message
-            holder.message.gravity = Gravity.END
-        }
+            is MyChattingViewHolder -> {
+                holder.message.text = allChattingItemList[position].message
 
+            }
+
+        }
+    }
+
+    companion object {
+        const val CHATTING_ROOM_OWNER_MY = 1
+        const val CHATTING_ROOM_OWNER_OTHER = 2
     }
 
 }
