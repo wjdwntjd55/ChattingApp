@@ -27,13 +27,15 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
 
+            val title = message.notification?.title
+
             // RemoteMessage 에서 데이터를 가져오는 방법
             // - RemoteMessage 의 notification 라는 인스턴스 안에 body 가 있다
             val body = message.notification?.body
 
             val notificationBuilder = NotificationCompat.Builder(applicationContext, getString(R.string.default_notification_channel_id))
                 .setSmallIcon(R.drawable.img_chat)
-                .setContentTitle(getString(R.string.app_name))
+                .setContentTitle(title)
                 .setContentText(body)
 
             notificationManager.notify(0, notificationBuilder.build())

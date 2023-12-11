@@ -18,11 +18,11 @@ class FCMApi(private val context: Context) {
 
     private val client = OkHttpClient()
 
-    fun sendFCM(message: String, fcmToken: String) {
+    fun sendFCM(userName: String,message: String, fcmToken: String) {
 
         val root = JSONObject()
         val notification = JSONObject()
-        notification.put("title", context.getString(R.string.app_name))
+        notification.put("title", userName)
         notification.put("body", message)
 
         root.put("to", fcmToken)
