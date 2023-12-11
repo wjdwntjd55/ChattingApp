@@ -44,9 +44,16 @@ class ChattingListFragment : Fragment() {
             initRecyclerView()
         }
 
+        initToolbar()
         initRecyclerView()
 
         return binding.root
+    }
+
+    private fun initToolbar() {
+        val toolbar = binding.materialToolbarChattingList
+        toolbar.title = "채팅 리스트"
+        toolbar.setTitleTextAppearance(context, R.style.Typography_Medium24)
     }
 
     private fun initRecyclerView() {
