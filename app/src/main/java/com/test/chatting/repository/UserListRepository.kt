@@ -34,6 +34,8 @@ class UserListRepository {
                     val user = User(userId, userName, userDescription, fcmToken, userProfile)
                     userList.add(user)
                 }
+
+                userList.sortBy { it.username }
             }
         }
 
